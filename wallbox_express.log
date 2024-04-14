@@ -1,0 +1,17 @@
+
+2024-04-14 19:48:12,993 - ERROR - 
+Traceback (most recent call last):
+  File "/home/maxime/Programmation/wallbox-express/src/core/data_operators.py", line 10, in load_data
+    df.rename(mapping_columns)
+  File "/home/maxime/Programmation/wallbox-express/src/core/dataframe.py", line 55, in rename
+    self.columns[self.headers[c1]] = c2
+KeyError: 'Location'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/maxime/Programmation/wallbox-express/src/gui/App.py", line 176, in browse_file
+    self.df = load_data(filepath, currency)
+  File "/home/maxime/Programmation/wallbox-express/src/core/data_operators.py", line 13, in load_data
+    raise WallboxSchemaError
+core.exceptions.WallboxSchemaError

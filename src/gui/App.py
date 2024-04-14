@@ -1,4 +1,5 @@
 import os
+import logging
 import tkinter as tk
 from core.dataframe import DataFrame
 from core.schema import WallboxSchema
@@ -10,6 +11,13 @@ from gui.ScrollableFrame import ScrollableFrame
 from core.data_operators import load_data, agg_user, agg_total
 from core.exceptions import WallboxCurrencyError, WallboxSchemaError
 from gui.invoice import export_invoice
+
+
+logging.basicConfig(
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    filename="wallbox_express.log",
+)
+logger = logging.getLogger(__name__)
 
 
 class App(tk.Tk):
@@ -71,11 +79,14 @@ class App(tk.Tk):
         # Chargement de la configuration
         try:
             self.config = parse_config(config_file)
-        except TOMLDecodeError:
+        except TOMLDecodeError as error:
+            logger.exception(error)
             self.print_error("Erreur : Le parsing du fichier de configuration a échoué.")
-        except AssertionError:
+        except AssertionError as error:
+            logger.exception(error)
             self.print_error("Erreur : Des champs du fichier de configuration sont manquants.")
-        except:
+        except Exception as error:
+            logger.exception(error)
             self.print_error("Erreur : Une erreur inattendue est survenue.")
 
     def print_error(self, error_msg: str):
@@ -168,13 +179,17 @@ class App(tk.Tk):
                 # Réinitialisation du bouton d'agrégation
                 self.agg_counter = 2
 
-            except FileNotFoundError:
+            except FileNotFoundError as error:
+                logger.exception(error)
                 self.print_error("Erreur : Le fichier est introuvable")
-            except WallboxSchemaError:
+            except WallboxSchemaError as error:
+                logger.exception(error)
                 self.print_error("Erreur : Le schéma de données est incorrect")
-            except WallboxCurrencyError:
+            except WallboxCurrencyError as error:
+                logger.exception(error)
                 self.print_error(f"Erreur : La monnaie ({currency}) est inconsistante")
-            except:
+            except Exception as error:
+                logger.exception(error)
                 self.print_error("Erreur : Une erreur inattendue est survenue")
 
     def export_file(self):

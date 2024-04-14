@@ -1,4 +1,5 @@
 [schema]
+# Vérifie que la monnaie est la même partout
 currency = "EUR"
 
 [invoice]
@@ -15,4 +16,5 @@ M et Mme Dupont
 footer = """
 Règlement par chèque autorisé."""
 
+# Pourcentage entre 0 et 1
 tva = 0.20
