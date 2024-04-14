@@ -24,33 +24,44 @@ class DataFrame:
     def __setitem__(self, key: str, value: Any) -> None:
         pass
 
+    def __iter__(self) -> List[Any]:
+        return self.data.__iter__()
+
     def read_csv(self, csv_file: str, delimiter: str = ',', quotechar: str = '"') -> None:
-        with open(csv_file, 'r', newline='') as f:
-            reader = csv.reader(f, delimiter=delimiter, quotechar=quotechar)
+        with open(csv_file, 'r', newline='') as file:
+            reader = csv.reader(file, delimiter=delimiter, quotechar=quotechar)
             self.columns = reader.__next__()
             self.headers = {v: i for i, v in enumerate(self.columns)}
             self.data = list(reader)
 
     def write_csv(self, csv_file: str, delimiter: str = ',', quotechar: str = '"') -> None:
-        pass
+        with open(csv_file, 'w', newline='') as file:
+            writer = csv.writer(file, delimiter=delimiter, quotechar=quotechar)
+            writer.writerow(self.columns)
+            writer.writerows(self.data)
 
-    def __iter__(self) -> List[Any]:
-        return self.data.__iter__()
+    def drop_lines(self, indexes: list[int]):
+        """
+        Drop multiple lines of the dataframe
+        """
+        self.data = [
+            row for i, row in enumerate(self.data) 
+            if i not in indexes 
+        ]
     
     def rename(self, columns: Dict[str, str]):
         for c1, c2 in columns.items():
-            if c1 in self.headers and c1 != c2:
-                self.columns[self.headers[c1]] = c2 
-                self.headers[c2] = self.headers.pop(c1)
+            # Fails if c1 not in self.headers with KeyError
+            self.columns[self.headers[c1]] = c2 
+            self.headers[c2] = self.headers.pop(c1)
 
     def apply_schema(self, schema: Dict[str, Callable[[Any], Any]]) -> None:
         for i in range(len(self.data)):
             # Remove unused columns
-            row = self.data[i]
+            # Fails if col not in self.headers with KeyError
             self.data[i] = [
-                schema[self.columns[j]](row[j])
-                for j in range(len(self.columns))
-                if self.columns[j] in schema
+                data_conv(self.data[i][self.headers[col]])
+                for col, data_conv in schema.items()
             ]
 
         # Correct columns and headers

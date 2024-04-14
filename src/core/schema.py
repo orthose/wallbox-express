@@ -22,7 +22,7 @@ class ColumnHeader:
 class WallboxSchema:
     LOCATION = ColumnHeader("Location", "LOCATION", str, str)
     CHARGER = ColumnHeader("Charger", "CHARGER", str, str)
-    USER = ColumnHeader("User name", "USER", str, str)
+    USER = ColumnHeader("User name", "USER_NAME", str, str)
     CHARGING_TIME = ColumnHeader("Charging time (h:m:s)", "CHARGING_TIME", string_to_datetime_hms, timedelta)
     ENERGY = ColumnHeader("Energy (kWh)", "ENERGY", string_to_float, float)
     CURRENCY = ColumnHeader("Currency", "CURRENCY", str, str)

@@ -52,6 +52,7 @@ def test_apply_schema():
             assert isinstance(val, str) 
     df.apply_schema(schema_convs)
     for row in df:
+        assert len(row) == len(schema_convs)
         for i, val in enumerate(row):
             col = df.columns[i]
             if col in schema_convs:

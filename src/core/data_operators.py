@@ -5,11 +5,11 @@ from core.schema import mapping_columns, schema_convs, WallboxSchema
 
 def load_data(csv_file: str, currency: str) -> DataFrame:
     df = DataFrame()
+    df.read_csv(csv_file)
     try:
-        df.read_csv(csv_file)
         df.rename(mapping_columns)
         df.apply_schema(schema_convs)
-    except Exception:
+    except:
         raise WallboxSchemaError
     
     currency_index = df.headers[WallboxSchema.CURRENCY.target_name] 
