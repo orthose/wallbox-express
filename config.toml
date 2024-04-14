@@ -1,0 +1,18 @@
+[schema]
+currency = "EUR"
+
+[invoice]
+seller = """
+L'Élysée
+55 Rue du Faubourg Saint-Honoré
+75008 Paris"""
+
+customer = """
+M et Mme Dupont
+56 Rue du Faubourg Saint-Honoré
+75008 Paris"""
+
+footer = """
+Règlement par chèque autorisé."""
+
+tva = 0.20
