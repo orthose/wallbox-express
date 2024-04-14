@@ -31,6 +31,9 @@ class DataFrame:
             self.headers = {v: i for i, v in enumerate(self.columns)}
             self.data = list(reader)
 
+    def write_csv(self, csv_file: str, delimiter: str = ',', quotechar: str = '"') -> None:
+        pass
+
     def __iter__(self) -> List[Any]:
         return self.data.__iter__()
     
@@ -41,12 +44,22 @@ class DataFrame:
                 self.headers[c2] = self.headers.pop(c1)
 
     def apply_schema(self, schema: Dict[str, Callable[[Any], Any]]) -> None:
-        for col, data_type in schema.items():
-            for row in self.data:
-                for j in range(len(row)):
-                    if self.headers[col] == j:
-                        row[j] = data_type(row[j])
+        for i in range(len(self.data)):
+            # Remove unused columns
+            row = self.data[i]
+            self.data[i] = [
+                schema[self.columns[j]](row[j])
+                for j in range(len(self.columns))
+                if self.columns[j] in schema
+            ]
 
+        # Correct columns and headers
+        self.columns = [
+            col for col in self.columns
+            if col in schema
+        ]
+        self.headers = {v: i for i, v in enumerate(self.columns)}
+                
     def group_by(self, 
                  group_cols: List[str], 
                  agg_cols: Dict[str, Callable[[T, T], T]]
